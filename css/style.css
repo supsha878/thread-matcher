@@ -49,6 +49,10 @@ h3 {
     padding: 10%;
 }
 
+h5 {
+    padding: 2.5%;
+}
+
 #color-out {
     width: 100px;
     height: 100px;

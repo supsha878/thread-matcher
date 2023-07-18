@@ -52,15 +52,17 @@ function matchColor(event) {
     const threadNumber = document.createElement('h3');
     threadNumber.id = 'thread-number';
     threadNumber.textContent = threadOut[3];
-    const threadName = document.createElement('h4');
+
+    const threadName = document.createElement('h5');
     threadName.id = 'thread-name';
-    threadNumber.textContent = threadOut[4];
+    threadName.textContent = threadOut[4];
+
     const divColor = document.createElement('div');
     divColor.id = 'color-out';
     divColor.style.backgroundColor = 'rgb(' + threadOut[0] + ', ' + threadOut[1] + ', ' + threadOut[2] + ')';
     divColor.textContent = ' ';
 
-    divResult.append(threadNumber, threadName, divColor);
+    divResult.append(threadNumber, divColor, threadName);
     footerEl[0].append(divResult);
 
 }
