@@ -1,5 +1,6 @@
 // element variables
 const footerEl = document.getElementsByTagName('footer');
+//const colorScroll = document.getElementById("color-scroll");
 
 // form variables
 const colorForm = document.getElementById("color-form");
@@ -7,11 +8,23 @@ const colorIn = document.getElementById("color-in");
 
 colorForm.addEventListener("submit", matchColor);
 
+function initScroll() {
+
+    for (let i = 0; i < threadBasic.length; i++) {
+        const newColor = document.createElement('div');
+        newColor.style.backgroundColor = 'rgb(' + threadBasic[i][0] + ', ' + threadBasic[i][1] + ', ' + threadBasic[i][2] + ')';
+        colorScroll.append(newColor);
+    }
+};
+
 function matchColor(event) {
     event.preventDefault();
 
-    if (document.getElementById('result')) {
-        document.getElementById('result').remove();
+    if (document.getElementById('main-result')) {
+        document.getElementById('main-result').remove();
+    }
+    if (document.getElementById('close-container')) {
+        document.getElementById('close-container').remove();
     }
 
     const content = document.querySelector('#color-in').value;
@@ -34,36 +47,71 @@ function matchColor(event) {
         threadDistance.push(totalDist);
     }
 
-    let minDistance = Number.MAX_SAFE_INTEGER;
-    let minIndex = -1;
+    const closeThreads = [];
+    const closeIndex = [];
 
-    for (let i = 0; i < threadDistance.length; i++) {
-        if (threadDistance[i] < minDistance) {
-            minDistance = threadDistance[i];
-            minIndex = i;
+    while (closeThreads.length < 6) {
+
+        let minDistance = Number.MAX_SAFE_INTEGER;
+        let minIndex = -1;
+
+        for (let i = 0; i < threadDistance.length; i++) {
+            if (!closeIndex.includes(i)) {
+                if (threadDistance[i] < minDistance) {
+                    minDistance = threadDistance[i];
+                    minIndex = i;
+                }
+            }
         }
+
+    closeThreads.push(threadBasic[minIndex]);
+    closeIndex.push(minIndex);
+
     }
 
-    const threadOut = threadBasic[minIndex];
-
-    const divResult = document.createElement('div');
-    divResult.id = 'result';
+    // attach closest match
+    const divMainResult = document.createElement('div');
+    divMainResult.id = 'main-result';
 
     const threadNumber = document.createElement('h3');
     threadNumber.id = 'thread-number';
-    threadNumber.textContent = threadOut[3];
+    threadNumber.textContent = closeThreads[0][3];
 
     const threadName = document.createElement('h5');
     threadName.id = 'thread-name';
-    threadName.textContent = threadOut[4];
+    threadName.textContent = closeThreads[0][4];
 
     const divColor = document.createElement('div');
     divColor.id = 'color-out';
-    divColor.style.backgroundColor = 'rgb(' + threadOut[0] + ', ' + threadOut[1] + ', ' + threadOut[2] + ')';
+    divColor.style.backgroundColor = 'rgb(' + closeThreads[0][0] + ', ' + closeThreads[0][1] + ', ' + closeThreads[0][2] + ')';
     divColor.textContent = ' ';
 
-    divResult.append(threadNumber, divColor, threadName);
-    footerEl[0].append(divResult);
+    const divCloseContainer = document.createElement('div');
+    divCloseContainer.id = 'close-container';
+
+    divMainResult.append(threadNumber, divColor, threadName);
+    footerEl[0].append(divMainResult, divCloseContainer);
+    // footerEl[0].insertBefore(divMainResult, colorScroll);
+
+
+    for (let i = 1; i <= 5; i++) {
+
+        const divCloseResult = document.createElement('div');
+        divCloseResult.id = 'close-result';
+
+        const closeColor = document.createElement('div');
+        closeColor.className = 'close-color';
+        closeColor.style.backgroundColor = 'rgb(' + closeThreads[i][0] + ', ' + closeThreads[i][1] + ', ' + closeThreads[i][2] + ')';
+        closeColor.textContent = ' ';
+
+        const closeNumber = document.createElement('h4');
+        closeNumber.textContent = closeThreads[i][3];
+
+        divCloseResult.append(closeColor, closeNumber);
+        divCloseContainer.append(divCloseResult);
+
+    }
+
 
 }
 
@@ -468,7 +516,7 @@ const threadBasic = [ // 481 total
     [ 158, 105,  67,  '3045',   'toffee',                           'yellow beige'],
     [ 133,  79,  47,   '167',   'praline',                          'yellow beige'],
 
-    // 14 -- 31 colors
+    // 14 -- 26 colors
     [ 239, 212, 157,   '677',   'metallic sand',                    'old gold'],
     [ 227, 159, 100,   '676',   'savannah',                         'old gold'],
     [ 191, 115,  55,   '729',   'honey',                            'old gold'],
@@ -502,13 +550,13 @@ const threadBasic = [ // 481 total
     [ 242, 136,  84,  '3854',   'chai spice',                       'autumn gold'],
     [ 233,  86,  43,  '3853',   'copper',                           'autumn gold'],
 
+    // 15 -- 22 colors
     [ 236, 146,  99,  '3827',   'coral blush',                      'golden brown'],
     [ 233, 126,  81,   '977',   'caramel',                          'golden brown'],
     [ 202,  83,  44,   '976',   'nutmeg',                           'golden brown'],
     [ 160,  55,  30,  '3826',   'fox',                              'golden brown'],
     [ 106,  30,  17,   '975',   'weasel',                           'golden brown'],
 
-    // 15 -- 17 colors
     [ 251, 254, 147,   '445',   'buttered popcorn',                 'lemon'],
     [ 250, 236,  51,   '307',   'lemon',                            'lemon'],
     [ 248, 201,  27,   '444',   'bright yellow',                    'lemon'],
@@ -671,7 +719,7 @@ const threadBasic = [ // 481 total
     [  71,  67,  49,  '3787',   'grey wolf',                        'brown gray'],
     [  40,  32,  24,  '3021',   'ink',                              'brown gray'],
 
-    [ 255, 255, 255, 'B2500',   'pearlescent white light',          'snow white'],
+    [ 255, 255, 255, 'B5200',   'pearlescent white light',          'snow white'],
 
     [ 253, 253, 253, 'BLANC',   'blanc',                            'white'],
 
@@ -696,3 +744,5 @@ const threadBasic = [ // 481 total
 
     [   3,   3,   3,   '310',   'metallic black',                   'black']
 ];
+
+// initScroll();
